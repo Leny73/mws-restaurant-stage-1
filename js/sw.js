@@ -31,11 +31,11 @@ self.addEventListener('install', function(event){
 self.addEventListener('fetch', function(event) {
     console.log('Cache is serving the asset');
     event.respondWith(
-	    caches.match(event.request).then(function(response){
-            if(response) return response;
-            return fetch(event.request);
+        caches.match(event.request).then(function(response){
+          if(response) return response;
+          return fetch(event.request);
         })
-	);
+      );
 });
 self.addEventListener('activate',function(event){
     console.log('Service worker has been activated');
