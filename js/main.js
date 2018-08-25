@@ -218,3 +218,4 @@ navigator.serviceWorker.register('/js/sw.js').then(function(){
   console.log('Registration failed');
 })
 }
+registerServiceWorker();
