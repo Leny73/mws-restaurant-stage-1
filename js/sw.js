@@ -29,6 +29,7 @@ self.addEventListener('install', function(event){
     );
 });
 self.addEventListener('fetch', function(event) {
+    console.log("The asset is serving");
     event.respondWith(
       caches.open('RestaurantReviews-v1').then(function(cache) {
         return cache.match(event.request).then(function (response) {
