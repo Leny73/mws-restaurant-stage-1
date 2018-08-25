@@ -1,8 +1,8 @@
-
+var staticCache = 'RestaurantReviews-v3'
 self.addEventListener('install', function(event){
     console.log('The service worker is being installed');
     event.waitUntil(
-        caches.open('RestaurantReviews-v1').then(function(cache){
+        caches.open(staticCache).then(function(cache){
             console.log('Cache loaded');
             return cache.addAll([
                 '/',
@@ -31,7 +31,7 @@ self.addEventListener('install', function(event){
 self.addEventListener('fetch', function(event) {
     console.log("The asset is serving");
     event.respondWith(
-      caches.open('RestaurantReviews-v1').then(function(cache) {
+      caches.open(staticCache).then(function(cache) {
         return cache.match(event.request).then(function (response) {
           return response || fetch(event.request).then(function(response) {
             cache.put(event.request, response.clone());
@@ -43,4 +43,15 @@ self.addEventListener('fetch', function(event) {
   });
 self.addEventListener('activate',function(event){
     console.log('Service worker has been activated');
-})
+    event.waitUntil(
+        caches.keys().then(function(cacheNames){
+            return Promise.all(
+                cacheNames.filter(function(cacheName){
+                    return cacheName.startsWith('RestaurantReviews-') && cacheName != staticCache
+                }).map(function(cacheName){
+                    return cache.delete(cacheName);
+                })
+            );
+        })
+    );
+});
