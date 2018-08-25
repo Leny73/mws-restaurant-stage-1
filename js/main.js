@@ -212,7 +212,29 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 
 function registerServiceWorker(string){
   if(!navigator.serviceWorker) return;
-navigator.serviceWorker.register(string).then(function(){
+navigator.serviceWorker.register(string).then(function(reg){
+  if(!navigator.serviceWorker.controller) return;
+
+  if(reg.waiting){
+    console.log('Service worker waiting');
+    return;
+  }
+  if(reg.installing){
+    reg.addEventListener('statechange',function(){
+      if(reg.state == 'installed'){
+        console.log('There has been an event installation')
+      }
+    })
+    return;
+  }
+  reg.addEventListener('updatefound',function(){
+    if(reg.state == "installed"){
+      console.log('There has been an event installation');
+    }
+  });
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    window.location.reload();
+  })
   console.log('Registration worked!');
 }).catch(function(){
   console.log('Registration failed');
