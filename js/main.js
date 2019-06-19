@@ -210,34 +210,18 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 } */
 
-function registerServiceWorker(string){
-  if(!navigator.serviceWorker) return;
-navigator.serviceWorker.register(string).then(function(reg){
-  if(!navigator.serviceWorker.controller) return;
 
-  if(reg.waiting){
-    console.log('Service worker waiting');
-    return;
-  }
-  if(reg.installing){
-    reg.addEventListener('statechange',function(){
-      if(reg.state == 'installed'){
-        console.log('There has been an event installation')
-      }
-    })
-    return;
-  }
-  reg.addEventListener('updatefound',function(){
-    if(reg.state == "installed"){
-      console.log('There has been an event installation');
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+      .then(function(registration) {
+          console.log("Service Worker Registered", registration);
+      })
+      .catch(function(err) {
+          console.log("Service Worker Failed to Register", err);
+      })
     }
-  });
-  navigator.serviceWorker.addEventListener('controllerchange',function(){
-    window.location.reload();
-  })
-  console.log('Registration worked!');
-}).catch(function(){
-  console.log('Registration failed');
-})
-}
-registerServiceWorker('/js/sw.js');
+  }
+)};
+    
